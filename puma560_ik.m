@@ -1,6 +1,6 @@
 function [thetaF_D,thetaF_R]=puma560_ik_guangxiao(Tbe)
-%¹ãÏşµÄDHÄ£ĞÍ  56ÓĞÇø±ğ
-%¹ãÏşµÃÄæ½â£¬Ö»ÊÇÕë¶ÔËû×Ô¼ºDH×ø±êÏµÊÊÓÃ£¬Í¬Ê±Ò²ÊÇ¿¼ÂÇÁË-theta2-90   -theta3£¬ËùÒÔÔÚplot£¬Õı½âÊ±ºòÒª×¢Òâ£¬È¡¸ºÊı
+%å¹¿æ™“çš„DHæ¨¡å‹  56æœ‰åŒºåˆ«
+%å¹¿æ™“å¾—é€†è§£ï¼Œåªæ˜¯é’ˆå¯¹ä»–è‡ªå·±DHåæ ‡ç³»é€‚ç”¨ï¼ŒåŒæ—¶ä¹Ÿæ˜¯è€ƒè™‘äº†-theta2-90   -theta3ï¼Œæ‰€ä»¥åœ¨plotï¼Œæ­£è§£æ—¶å€™è¦æ³¨æ„ï¼Œå–è´Ÿæ•°
 L6=0; L2=0.2; L7=0; L4=0.248; L5=0.262;L3=0; 
 %    ti   di     ai-1     alphai-1 
 MDH=[0   0       0         0;
@@ -9,7 +9,7 @@ MDH=[0   0       0         0;
      0   L4      L3        -pi/2;
      0   0       0         -pi/2;
      0   0       0         pi/2
-     0   L5      0         pi/2];%theta_tool=90  Ä©¶Ë¹¤¾ß
+     0   L5      0         pi/2];%theta_tool=90  æœ«ç«¯å·¥å…·
 px=Tbe(1,4); py=Tbe(2,4); pz=Tbe(3,4);DEG =pi/180;
  rou=sqrt(px^2+py^2);
  
@@ -23,11 +23,11 @@ px=Tbe(1,4); py=Tbe(2,4); pz=Tbe(3,4);DEG =pi/180;
     K = (px^2+py^2+pz^2+L6^2-L2^2-L3^2-L4^2-L7^2-2*L6*(px*cos(th11)+py*sin(th11)))/(2*L2);
     %R=sqrt(L3^2+L4^2);
 
-    th31 = atan2(K,sqrt(L3^2+L4^2-K^2))-atan2(L3,L4);       
-    th32 = atan2(K,-sqrt(L3^2+L4^2-K^2))-atan2(L3,L4);
+    th31 = atan2(K,sqrt(abs(L3^2+L4^2-K^2)))-atan2(L3,L4);       
+    th32 = atan2(K,-sqrt(abs(L3^2+L4^2-K^2)))-atan2(L3,L4);
 
     
-%theta2 ÓĞ4¸ö½â£¬·Ö±ğÁĞ³ö
+%theta2 æœ‰4ä¸ªè§£ï¼Œåˆ†åˆ«åˆ—å‡º
 %th11 th31
 Tempy = (L4+L2*sin(th31))*pz-(L3+L2*cos(th31))*(-L6+px*cos(th11)+py*sin(th11));
 Tempx = (L3+L2*cos(th31))*pz-(L4+L2*sin(th31))*(L6-px*cos(th11)-py*sin(th11));
@@ -50,7 +50,7 @@ thetaT = atan2(Tempy,Tempx);
 th24 = thetaT - th32;
 
 
-%Çó½âtheta4£¬Í¨¹ıth1 th2 th3
+%æ±‚è§£theta4ï¼Œé€šè¿‡th1 th2 th3
 ax = Tbe(1,3); ay = Tbe(2,3); az = Tbe(3,3);
 %th11 th31 th21
 Tempy = ax*sin(th11)-ay*cos(th11);
@@ -73,7 +73,7 @@ Tempx = az*cos(th24+th32)-ax*cos(th12)*sin(th32+th24)-ay*sin(th12)*sin(th24+th32
 th44 = atan2(Tempy,Tempx);
 
 
-%Çó½âtheta5 Í¨¹ıth1 th2 th3 th4
+%æ±‚è§£theta5 é€šè¿‡th1 th2 th3 th4
 %th11 th31 th21 th41
 Tempy = ax*(sin(th11)*sin(th41)-sin(th21+th31)*cos(th41)*cos(th11))-ay*(cos(th11)*sin(th41)+sin(th21+th31)*cos(th41)*sin(th11))+az*cos(th21+th31)*cos(th41);
 Tempx = az*sin(th21+th31)+ax*cos(th21+th31)*cos(th11)+ay*cos(th21+th31)*sin(th11);
@@ -91,7 +91,7 @@ Tempy = ax*(sin(th12)*sin(th44)-sin(th24+th32)*cos(th44)*cos(th12))-ay*(cos(th12
 Tempx = az*sin(th24+th32)+ax*cos(th24+th32)*cos(th12)+ay*cos(th24+th32)*sin(th12);
 th54 = atan2(Tempy,Tempx);
 
-%Çó½âtheta6
+%æ±‚è§£theta6
 nx = Tbe(1,1); ny = Tbe(2,1); nz = Tbe(3,1);
 %th11 th31 th21 th41 th51
 Tempy = nx*(cos(th41)*sin(th11)+sin(th21+th31)*sin(th41)*cos(th11))-ny*(cos(th11)*cos(th41)-sin(th21+th31)*sin(th11)*sin(th41))-nz*cos(th21+th31)*sin(th41);
@@ -122,7 +122,7 @@ Tempx3 = -nz*(sin(th21+th32)*sin(th54)-cos(th24+th32)*cos(th44)*cos(th54));
 Tempx=Tempx1+Tempx2+Tempx3;
 th64 = atan2(Tempy,Tempx);
 
-%×îÖÕ½á¹û£¬¾ØÕóÏÔÊ¾
+%æœ€ç»ˆç»“æœï¼ŒçŸ©é˜µæ˜¾ç¤º
 thetaF = zeros(8,6);
 thetaF(1,1) = th11/DEG; thetaF(1,2) = th21/DEG; thetaF(1,3) = th31/DEG; thetaF(1,4) = th41/DEG; thetaF(1,5) = th51/DEG; thetaF(1,6) = th61/DEG;
 thetaF(2,1) = th11/DEG; thetaF(2,2) = th22/DEG; thetaF(2,3) = th32/DEG; thetaF(2,4) = th42/DEG; thetaF(2,5) = th52/DEG; thetaF(2,6) = th62/DEG;
@@ -135,7 +135,7 @@ thetaF(8,1) = th12/DEG; thetaF(8,2) = th24/DEG; thetaF(8,3) = th32/DEG; thetaF(8
 
 
 
-%ÎªÁË»­Í¼,maltab»­Í¼ÀïÃæq2  q3ÊÇÕıµÄ£¬Äæ½â³öÀ´Ò²ÊÇÕıµÄ£¬µ«ÊÇDH½¨Ä£ÊÇ¸º£¬ËùÒÔ»­Í¼ĞèÒª¸ºµÄ£¬Èç¹û²»»­Í¼ÓÃ¹âĞ§Õû½à£¬¾ÍĞèÒªÔÙ´ÎÈ¡·´
+%ä¸ºäº†ç”»å›¾,maltabç”»å›¾é‡Œé¢q2  q3æ˜¯æ­£çš„ï¼Œé€†è§£å‡ºæ¥ä¹Ÿæ˜¯æ­£çš„ï¼Œä½†æ˜¯DHå»ºæ¨¡æ˜¯è´Ÿï¼Œæ‰€ä»¥ç”»å›¾éœ€è¦è´Ÿçš„ï¼Œå¦‚æœä¸ç”»å›¾ç”¨å…‰æ•ˆæ•´æ´ï¼Œå°±éœ€è¦å†æ¬¡å–å
 thetaF(:,2)=-thetaF(:,2);
 thetaF(:,3)=-thetaF(:,3);
 
